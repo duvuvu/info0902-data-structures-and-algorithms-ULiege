@@ -1,0 +1,143 @@
+\documentclass[a4paper,10pt]{article}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{array}
+\usepackage{clrscode3e}
+
+
+
+\begin{document}
+
+
+\section*{Exemple 1}
+
+\begin{codebox}
+    \li \Comment $\{C \geq 0\}$
+    \li $x \gets A$
+    \li $y \gets C$
+    \li $product\gets 0$
+    \li \While $y > 0$
+    \li \Do     $product\gets product + x$
+    \li         $y = y - 1$
+        \End
+    \li \Comment $\{product = A \times C\}$
+    \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 2}
+\begin{codebox}
+    \Procname{$g(n)$}
+    \li \If $n \leq 1$
+    \li \Then \Return $n$
+    \li \Else
+    \li \Return $5 g(n-1) - 6 g(n-2)$
+        \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 3}
+\begin{codebox}
+    \Procname{$\proc{Code1}(n)$}
+    \li $limit\gets n*n$
+    \li $sum\gets 0$
+    \li \For $i\gets 1$ \To $limit$
+    \li \Do $sum\gets sum+1$
+        \End
+    \li \Return $sum$
+    \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 4}
+\begin{codebox}
+    \Procname{$\proc{Code2}(n)$}
+    \li $i\gets 1$
+    \li $limit\gets n*n*n$
+    \li $sum\gets 0$
+    \li \While $i < limit$
+    \li \Do $sum\gets sum+1$
+    \li     $i\gets i*2$
+        \End
+    \li \Return $sum$
+    \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 5}
+\begin{codebox}
+    \Procname{$\proc{Code3}(n)$}
+    \li $limit\gets n*n$
+    \li $sum\gets 0$
+    \li \For $i\gets 1$ \To $limit$
+    \li \Do \For $j\gets 1$ \To $i$
+    \li     \Do $sum\gets sum+1$
+            \End
+        \End
+    \li \Return $sum$
+    \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 6}
+\begin{codebox}
+    \Procname{$\proc{Code4}(n)$}
+    \li \If $n \leq 1$
+        \Then
+    \li     \Return n
+    \li \Else
+    \li     \Return $\proc{Code4}(n - 1) + proc{Code4}(n - 1)$
+       \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 7}
+\begin{codebox}
+    \Procname{$\proc{Code5}(a, b, c, n)$}
+    \li \For $i\gets 1$ \To $n$
+    \li \Do \For $j\gets 1$ \To $n$
+    \li     \Do $a[i][j]\gets 0$
+    \li         \For $k\gets 1$ to $n$
+    \li         \Do $a[i][j]\gets a[i][j] + b[i][k] * c[k][j]$
+                \End
+            \End
+        \End
+    \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 8}
+\begin{codebox}
+    \Procname{$\proc{Code6}(n)$}
+    \li \If $n == 0$
+        \Then
+    \li     \Return ""
+    \li \Else
+    \li     $tmp\gets \proc{Code6}(n/2)$
+    \li     \If $n \% 2 == 0$
+            \Then
+    \li         \Return $tmp + tmp$
+    \li     \Else
+    \li         \Return $tmp + tmp + "x"$
+            \End
+       \End
+\end{codebox}
+\vspace{10pt}
+
+\section*{Exemple 9}
+\begin{codebox}
+    \Procname{$\proc{Code7}(n)$}
+    \li $s\gets$ ""
+    \li \For $i\gets 1$ \To $n$
+    \li \Do $s\gets s + "x"$
+        \End
+    \li \Return $s$
+\end{codebox}
+\vspace{10pt}
+
+
+\end{document}

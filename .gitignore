@@ -1,3 +1,16 @@
+.vs
+.vscode
+*.class
+
+# Folders
+ref/
+*.idea/
+*obsolete/
+*nhaps/
+
+# Files
+*nhaps.txt
+
 # Prerequisites
 *.d
 
@@ -50,3 +63,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+

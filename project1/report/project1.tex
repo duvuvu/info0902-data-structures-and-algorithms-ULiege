@@ -1,0 +1,629 @@
+\documentclass[acmconf,nonacm=true]{acmart}
+\authorsaddresses{}
+
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{amsmath}
+
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+% \usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{array}
+\usepackage{clrscode3e}
+
+\usepackage{multicol}
+
+\begin{document}
+\title{INFO0902 - Data Structures and Algorithms \\ 
+Project 1 - Selection Algorithms}
+
+% Enter your names here, along with your student IDs.
+\author{Duy Vu Dinh (\texttt{s2401627})}
+
+\maketitle
+
+%-------------------------------------------------------------------
+
+
+
+% \section*{Overview}
+
+This report presents a theoretical and experimental analysis of four selection algorithms: \texttt{SelectionSelect}, \texttt{HeapSelect}, \texttt{QuickSelect}, and \texttt{FRSelect}. The objective of each algorithm is to determine the $k$-th smallest element in an array.
+
+
+\section{Theoretical analysis}
+
+\subsection{Complexity table and justifications} \label{sec:theory-complexity-results}
+
+Table \ref{tab:complexity} shows the time and space complexities in the worst case and the best case of the implemented algorithms, corresponding to their pseudocodes provided in Appendix \ref{Appendix}.
+
+    \begin{table}[h]
+        \centering
+        \footnotesize
+        \caption{Complexity of selection algorithms}
+        \label{tab:complexity}
+        \begin{tabular}{lcccc}
+            \hline
+            Algorithm & \multicolumn{2}{c}{Time complexity} & \multicolumn{2}{c}{Space complexity} \\
+            \cmidrule(r){2-3} \cmidrule(l){4-5}
+            & Worst case & Best case & Worst case & Best case \\
+            \hline
+            \textsc{SelectionSelect} & $\Theta(Nk)$ & $\Theta(Nk)$ & $\Theta(1)$ & $\Theta(1)$ \\
+            \textsc{HeapSelect} & $\Theta(N + k \log N)$ & $\Theta(N + k \log N)$ & $\Theta(1)$ & $\Theta(1)$ \\
+            \textsc{QuickSelect} & $\Theta(N^2)$ & $\Theta(N)$ & $\Theta(N)$ & $\Theta(\log N)$ \\
+            \textsc{FRSelect} & $\Theta(N)$ & $\Theta(N)$ & $\Theta(\log N)$ & $\Theta(\log N)$ \\
+            \hline
+        \end{tabular}
+    \end{table}
+
+% Add citation for FRSelect https://en.wikipedia.org/wiki/Floyd%E2%80%93Rivest_algorithm or https://core.ac.uk/download/pdf/82672439.pdf
+
+\subsubsection{\texttt{SelectionSelect}}
+
+    \begin{itemize}
+        \item \textbf{Time complexity}: The algorithm loops and compares every time. For each of the first $k$ positions, the algorithm performs up to $N$ comparisons. Therefore, the time complexity in both cases is $\Theta(Nk)$.
+        \item \textbf{Space complexity}: The algorithm works in-place, meaning it runs without needing extra memory. So, $\Theta (1)$ is the complexity for both cases.
+    \end{itemize}
+
+\subsubsection{\texttt{HeapSelect}}
+
+    \begin{itemize}
+        \item \textbf{Time complexity}: A heap building stage takes $\Theta(N)$. Then, a heapify takes $\Theta(\log N)$. Therefore, the whole algorithm takes $\Theta(N + k \log N)$.
+        \item \textbf{Space complexity}: The algorithm works in-place, meaning it runs without needing extra memory.
+    \end{itemize}
+
+\subsubsection{\texttt{QuickSelect}}
+
+    \begin{itemize}
+        \item \textbf{Time complexity}
+        \begin{itemize}
+            \item \textbf{Best case}: The pivot divides the array into two balanced parts. Since the algorithm recurses only on one side, a subarray, the expected number of comparisons follows the recurrence $T(N) = T(N/2) + \Theta(N)$, resulting in a time complexity of $\Theta(N)$. The best case usually occurs for a random array.
+            \item \textbf{Worst case}: The pivot is always the smallest or largest element (e.g., for sorted arrays when the last element is used as pivot), the recursion depth becomes $N$, and the recurrence becomes $T(N) = T(N - 1) + \Theta(N)$, resulting in $\Theta(N^2)$. 
+        \end{itemize}
+    
+        \item \textbf{Space complexity}. The space complexity depends on the depth of the recursive calls. 
+        \begin{itemize}
+            \item \textbf{Best case}: It is $\Theta(\log N)$ due to the recursive stack. 
+            \item \textbf{Worst case}: It becomes $\Theta(N)$ if the recursion goes as deep as the array size.
+        \end{itemize}
+    \end{itemize}
+
+\subsubsection{\texttt{FRSelect} (Floyd-Rivest select algorithm)}
+
+    \begin{itemize}
+        \item \textbf{Time complexity}
+        \begin{itemize}
+            \item The FRSelect algorithm improves QuickSelect by estimating a good pivot range using sampling and probabilistic analysis. It reduces the likelihood of unbalanced partitions. 
+            \item This approach ensures a worst-case and average-case time complexity of $\Theta(N)$, mentioned in Kiwiel and Krzysztof's work \cite{kiwiel2005floyd}.
+        \end{itemize}
+
+        \item \textbf{Space complexity}
+        \begin{itemize}
+            \item The algorithm involves recursive pivot range refinement, which results in a space complexity of $\Theta(\log N)$ due to the recursion stack.
+        \end{itemize}
+    \end{itemize}
+
+% \begin{table}[h]
+%     \centering
+%     \begin{tabular}{lcccc}
+%         \caption{Complexity of selection algorithms}
+%         \hline
+%         % Algorithm & \multicolumn{2}{c|}{Space complexity} & \multicolumn{2}{c|}{Time complexity} \\
+%         % \cline{2-5}
+%         % & Worst case & Best case & Worst case & Best case \\
+%         % \hline
+%         % SelectionSelect &  &  &  &  \\
+%         % HeapSelect &  &  &  &  \\
+%         QuickSelect & $\Theta(n)$ & $\Theta(1)$ & $\Theta(n^2)$ & $\Theta(n)$ \\
+%         FRSelect &  &  &  &  \\
+%         \hline
+%     \end{tabular}
+    
+%     \label{tab:sorting_comparison}
+% \end{table}
+
+\subsection{Complexity analysis of the average case of \texttt{Quickselect} in the case where $k=0$ (the minimum)}
+
+\subsubsection{Intuition}
+    \texttt{QuickSelect} uses the same partitioning logic as \texttt{QuickSort}. However, unlike \texttt{QuickSort} which recursively explores both sides, \texttt{QuickSelect} only recurses into one subarray, either the left or the right, depending on where the $k$-th element lies.
+    
+    In our case: $k = 0$ (i.e., looking for the minimum): If the pivot ends up in position 0 (smallest), we’re done. Otherwise, we only work on the left side of the pivot (elements are smaller than it).
+
+    On average, about half of the array each time is eliminated, a partition step that costs $\Theta(N)$. And only one recursive path is gone down instead of two (unlike \texttt{QuickSort}). Therefore, the average time complexity of \texttt{QuickSelect} is $\Theta(N)$.
+
+\subsubsection{Mathematical model}
+    \begin{itemize}
+        \item Number of elements in the array must be positive: $N > 0$
+        \item Number of comparisons for partitioning: $N - 1$.
+        \item Probability that the pivot is at position $i$: $\frac{1}{N}$.
+        \item Sizes of the sub-array in this case: $i-1$
+        \begin{itemize}
+            \item With the assumption of $k=0$, it means looking for the smallest.
+            \item Unlike \texttt{QuickSort}, which recursively explores both sides, \texttt{QuickSelect} only recurses into one subarray, the left subarray $A[0, i-1]$ when $k=0$.
+        \end{itemize}
+    \end{itemize}
+    So, the recurrence is:
+
+    \begin{equation}
+        C_0 = 0
+    \end{equation}
+
+    \begin{equation} \label{eq:2}
+        C_N = (N-1) + \sum_{i=1}^{N-1} \frac{1}{N} C_i
+    \end{equation}
+
+    Multiply Eq. (\ref{eq:2}) by $n$:
+    \begin{equation} \label{eq:3}
+        NC_N = N(N-1) + \sum_{i=1}^{N-1} C_i
+    \end{equation}
+
+    The same formula of Eq. (\ref{eq:4}) for $(N - 1)$:
+    \begin{equation} \label{eq:4}
+        (N-1)C_{N-1} = (N-1)(N-2) + \sum_{i=1}^{N-2} C_i
+    \end{equation}
+
+    Eq. (3) $-$ Eq. (4):
+    \begin{align} 
+        NC_N - (N - 1)C_{N-1} &= N (N - 1) - (N - 1)(N - 2) + C_{N-1} \label{eq:5} \\
+        \llap{$\Leftrightarrow$ \qquad} NC_N &= NC_{N-1} + 2(N-1) \label{eq:6} \\
+        \llap{$\Leftrightarrow$ \qquad} C_N &= C_{N-1} + \frac{2(N-1)}{N}  \label{eq:7}
+    \end{align}
+
+    Then, Eq. (\ref{eq:7}) is telescoped:
+    \begin{align} \label{eq:8}
+        C_N &= C_1 + \sum_{a=2}^{N} \frac{2(a-1)}{a} \\
+        % \llap{$\Leftrightarrow$ \qquad} C_N &= C_1 + (2N - 1) - 2 \sum_{a=2}^{N} \frac{1}{a} \\
+        \llap{$\Leftrightarrow$ \qquad} C_N &= C_1 + 2N - 2 \sum_{a=1}^{N} \frac{1}{a}
+    \end{align}
+
+    The sum of $\sum_{a=1}^{N} \frac{1}{a}$ simplifies into a form involving harmonic numbers $H_N = \sum_{a=1}^{N} \frac{1}{a}$, then:
+
+    \begin{align}
+        C_N &= 2N - 2 H_N  + C_1
+    \end{align}
+
+    Due to $H_N \in \Theta (\log N)$, therefore:
+    
+    \begin{equation}
+        C_N \in \Theta(N)
+    \end{equation}
+
+So, the expected complexity to find the minimum ($k = 0$) using \text{QuickSelect} is $\Theta(N)$.
+
+    
+\subsection{The stable of algorithm}
+
+All of the mentioned algorithms are unstable. Justifications:
+\begin{itemize}
+    \item \texttt{SelectionSelect} swaps non-adjacent elements.
+    \item \texttt{HeapSelect} includes Heapify and extract-min disrupt the original positions of duplicates.
+    \item Both of \texttt{QuickSelect} and \texttt{FRSelect} use partitioning moves to equal elements without considering original order (not order-preserving).
+\end{itemize}
+
+
+
+
+\newpage
+
+\section{Experiments}
+
+\subsection{Experiment results}
+
+% https://docs.google.com/spreadsheets/d/1T8_v9qw1nP2TVHZsp8hWlpYfy9XIOhXbvHXGW2Oq3hg/edit?gid=1690685856#gid=1690685856
+
+The experiment results, including the average computation times and the average number of comparisons over 10 experiments, of each mentioned algorithm for the search of median and $10$-th percentile are shown in Table \ref{table:k-0.5N} and Table \ref{table:k-0.1N}, respectively. Unfortunately, due to the limitation of resources, I cannot run the cases for $N=10^6$ for the \texttt{SelectionSelect} and \texttt{QuickSelect} algorithms. However, the experiments regarding $N=10^4$ and $N=10^5$ are quite enough for them to analyze the complexity. In addition, the computation times and the number of comparisons for each algorithm with $N=10^6$ are expected to follow the theoretical evolution of complexity in Section \ref{sec:comment-a}.
+
+\begin{table}[h!]
+    \centering
+    \scriptsize
+    \caption{Computation times and the number of computations of the algorithms for the search of the median ($k=N/2$).}
+    \label{table:k-0.5N}
+    \begin{tabular}{llrrrrrrrrrrrr}
+        \toprule
+        {Metric} & {Type of array} & \multicolumn{3}{c}{{random}} & \multicolumn{3}{c}{{increasing}} & \multicolumn{3}{c}{{decreasing}} & \multicolumn{3}{c}{{constant}} \\
+        \cmidrule(r){3-5} \cmidrule(lr){6-8} \cmidrule(lr){9-11} \cmidrule(l){12-14}
+        & {Size} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} \\
+        \midrule 
+q        Time [s] & \textsc{SelectionSelect} & 0.05569 & 5.51715 & - & 0.05480 & 5.49899 & - & 0.05839 & 6.95391 & - & 0.05491 & 5.51944 & - \\
+        & \textsc{HeapSelect} & 0.00078 & 0.00940 & 0.11738 & 0.00059 & 0.00700 & 0.08255 & 0.00067 & 0.00755 & 0.09756 & 0.00005 & 0.00051 & 0.00551 \\
+        & \textsc{QuickSelect} & 0.00014 & 0.00140 & - & 0.12229 & 12.39652 & - & 0.11824 & 11.03308 & - & 0.12279 & 12.37940 & - \\
+        & \textsc{FRSelect} & 0.00010 & 0.00083 & 0.00717 & 0.00001 & 0.00015 & 0.00223 & 0.00010 & 0.00081 & 0.00744 & 0.00005 & 0.00045 & 0.00465 \\
+        \midrule 
+        \#comps & \textsc{SelectionSelect} & 37502499 & 3750024999 & - & 37502499 & 3750024999 & - & 37502499 & 3750024999 & - & 37502499 & 3750024999 & - \\
+        & \textsc{HeapSelect} & 137082 & 1704351 & 20315900 & 128095 & 1609845 & 19421172 & 142375 & 1756943 & 20865881 & 20001 & 200001 & 2000001 \\
+        & \textsc{QuickSelect} & 33510 & 337053 & - & 37497500 & 3749975000 & - & 49530691 & 4567259156 & - & 37497500 & 3749975000 & - \\
+        & \textsc{FRSelect} & 28662 & 228256 & 2053122 & 10237 & 128132 & 3023096 & 60642 & 516838 & 3715446 & 21036 & 205538 & 2027434 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \scriptsize
+    \caption{Computation times and the number of computations of the algorithms for the search of the $10$-th percentile ($k=N/10$).}
+    \label{table:k-0.1N}
+    \begin{tabular}{llrrrrrrrrrrrr}
+        \toprule
+        {Metric} & {Type of array} & \multicolumn{3}{c}{{random}} & \multicolumn{3}{c}{{increasing}} & \multicolumn{3}{c}{{decreasing}} & \multicolumn{3}{c}{{constant}} \\
+        \cmidrule(r){3-5} \cmidrule(lr){6-8} \cmidrule(lr){9-11} \cmidrule(l){12-14}
+        & {Size} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} \\
+        \midrule 
+        Time [s] & \textsc{SelectionSelect} & 0.01400 & 1.40042 & - & 0.01396 & 1.39636 & - & 0.01574 & 1.94957 & - & 0.01389 & 1.39717 & - \\
+        & \textsc{HeapSelect} & 0.00023 & 0.00282 & 0.03382 & 0.00013 & 0.00156 & 0.01867 & 0.00018 & 0.00215 & 0.02580 & 0.00003 & 0.00028 & 0.00290 \\
+        & \textsc{QuickSelect} & 0.00011 & 0.00124 & - & 0.16220 & 16.31266 & - & 0.04240 & 3.97832 & - & 0.16169 & 16.34995 & - \\
+        & \textsc{FRSelect} & 0.00006 & 0.00043 & 0.00359 & 0.00002 & 0.00016 & 0.00208 & 0.00006 & 0.00054 & 0.00538 & 0.00005 & 0.00046 & 0.00467 \\
+        \midrule
+        \#comps & \textsc{SelectionSelect} & 9508499 & 950084999 & - & 9508499 & 950084999 & - & 9508499 & 950084999 & - & 9508499 & 950084999 & - \\
+        & \textsc{HeapSelect} & 43315 & 499237 & 5645068 & 34385 & 411295 & 4778017 & 45756 & 517608 & 5783012 & 12001 & 120001 & 1200001 \\
+        & \textsc{QuickSelect} & 26776 & 292732 & - & 49495500 & 4949955000 & - & 17828014 & 1642308451 & - & 49495500 & 4949955000 & - \\
+        & \textsc{FRSelect} & 16991 & 148697 & 1538045 & 10238 & 110162 & 1634026 & 42912 & 380860 & 3564183 & 21144 & 205874 & 2028430 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\subsection{Comments} \label{comment}
+
+\subsubsection{Compare the evolution of computation times} \label{sec:comment-a}
+
+Table \ref{table:evolution-observation} shows the increasing rates of computation times from $N=10^4$ to $N=10^5$ and from $N=10^5$ to $N=10^6$ regarding the experiments, while Table \ref{table:evolution-theory} provides the expected growth based on the complexity. 
+
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \caption{The observed evolution of computation times.}
+    \label{table:evolution-observation}
+    \begin{tabular}{llrrrrrrrrr}
+        \toprule
+        Evolution range & {Type of array} & \multicolumn{2}{c}{{random}} & \multicolumn{2}{c}{{increasing}} & \multicolumn{2}{c}{{decreasing}} & \multicolumn{2}{c}{{constant}} \\
+        \cmidrule(r){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(l){9-10}
+        & $k$ & $N/2$ & $N/10$ & $N/2$ & $N/10$ & $N/2$ & $N/10$ & $N/2$ & $N/10$ \\
+        \midrule
+        $10^4 \to 10^5$ & \textsc{SelectionSelect} & 99.07 & 100.03 & 100.35 & 100.03 & 119.09 & 123.86 & 100.52 & 100.59 \\
+        & \textsc{HeapSelect} & 12.05 & 12.26 & 11.86 & 12.00 & 11.27 & 11.94 & 10.20 & 9.33 \\
+        & \textsc{QuickSelect} & 10.00 & 11.27 & 101.37 & 100.57 & 93.31 & 93.83 & 100.82 & 101.12 \\
+        & \textsc{FRSelect} & 8.30 & 7.17 & 15.00 & 8.00 & 8.10 & 9.00 & 9.00 & 9.20 \\
+             \midrule
+        $10^5 \to 10^6$ & \textsc{SelectionSelect} & - & - & - & - & - & - & - & - \\
+        & \textsc{HeapSelect} & 12.49 & 11.99 & 11.79 & 11.97 & 12.92 & 12.00 & 10.80 & 10.36 \\
+        & \textsc{QuickSelect} & - & - & - & - & - & - & - & - \\
+        & \textsc{FRSelect} & 8.64 & 8.35 & 14.87 & 13.00 & 9.19 & 9.96 & 10.33 & 10.15 \\      
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \caption{The theoretical evolution in terms of complexity.}
+    \label{table:evolution-theory}
+    \begin{tabular}{lrrrrrrrrr}
+        \toprule
+        {Type of complexity} & \multicolumn{2}{c}{{$\Theta (Nk)$}} & \multicolumn{2}{c}{{$\Theta (N + k \log N)$}} & \multicolumn{2}{c}{{$\Theta (N)$}} & \multicolumn{2}{c}{{$\Theta (N^2)$}} \\
+        \cmidrule(r){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(l){8-9}
+        $k$ & $N/2$ & $N/10$ & $N/2$ & $N/10$ & $N/2$ & $N/10$ & $N/2$ & $N/10$ \\
+        \midrule
+        $10^4 \to 10^5$ & 100.00 & 100.00 & 12.17 & 11.43 & 10.00 & 10.00 & 100.00 & 100.00 \\
+        $10^5 \to 10^6$ & 100.00 & 100.00 & 11.79 & 11.25 & 10.00 & 10.00 & 100.00 & 100.00 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+According to Table \ref{table:evolution-observation} and Table \ref{table:evolution-theory} as well as Table \ref{tab:complexity}, the experiments generally match these expectations:
+
+\begin{itemize}
+    \item \texttt{SelectionSelect} consistently witnesses a near $100$-time increase, regardless of array type or $k$, which aligns perfectly with its $\Theta(Nk)$ time complexity. Since both $N$ and $k$ grow by $10$ times, the overall work scales by $100$ times.
+    \item \texttt{HeapSelect} demonstrates a time increase in the range of $9.33$ to $12.26$ times, closely matching the theoretical complexity of $\Theta (N + k \log N)$. The growth is slightly sublinear in $k$ as expected (both $N$ and $k$ linearly grow by $10$ times, while $\log N$ increases slightly over $1$).
+    \item \texttt{QuickSelect} aligns well with its average-case complexity $\Theta (N)$ only for random arrays, where pivot positions are likely to be balanced. However, for sorted and constant arrays, it exhibits $\Theta (N^2)$ behavior, due to always choosing the last element as pivot. This leads to highly unbalanced partitions, which aligns to the worst case of complexity provided in Section \ref{sec:theory-complexity-results}, and thus a recursive depth approaching $N$, as confirmed by over $100$-time growth in time.
+    \item \texttt{FRSelect} shows the most consistent and optimal growth, close to 8-10 times, which aligns with its theoretical $\Theta (N)$ performance across all array types. It performance is stable even on sorted, constant arrays, unlike \texttt{QuickSelect}.
+\end{itemize}
+The results of \texttt{SelectionSelect} and \texttt{QuickSelect} in terms of $N=10^6$ are expected to correspond to the increase of complexity from $N=10^5$ to $N=10^6$.
+
+\subsubsection{Comment on the relative order of the different algorithms}
+
+
+Based on the experiment results, the relative order depends on the type of array:
+\begin{itemize}
+    \item For random arrays: \texttt{FRSelect} < \texttt{QuickSelect} < \texttt{HeapSelect} < \texttt{SelectionSelect}
+    \item For increase, decrease or constant arrays: \texttt{FRSelect} < \texttt{HeapSelect} < \texttt{SelectionSelect} < \texttt{QuickSelect}
+\end{itemize}
+
+In general, \texttt{FRSelect} dominates when input order is random or when values are uniform, while \texttt{HeapSelect} is the best fallback in worst-aligned cases. \texttt{QuickSelect} is highly efficient only under favorable pivot conditions.
+\begin{itemize}
+    \item \texttt{FRSelect} consistently outperforms the other algorithms across all array types. Its refined pivot selection, ensures balanced partitioning and avoids worst-case behavior. It achieves linear performance in all tested cases, closely matching its theoretical complexity of $\Theta(N)$.
+    \item \texttt{QuickSelect} performs very well on random arrays due to its average-case complexity of $\Theta(N)$. However, it performs poorly on sorted or constant arrays because the current implementation always chooses the last element as pivot, resulting in highly unbalanced partitions and $\Theta(N^2)$ behavior in the worst case. This caused significant slowdowns and made it infeasible to run for large inputs like $N = 10^6$.
+    \item \texttt{HeapSelect} exhibits stable and predictable performance, regardless of the input type. Its complexity of $\Theta(N + k \log N)$ reflects the cost of heap construction and repeated extract-min operations. While not the fastest, it avoids the extreme behavior seen in QuickSelect and consistently ranks in the middle of the group.
+    \item \texttt{SelectionSelect} is the slowest algorithm in all caeses. Its simply design resembles selection sort and has a time complexity of $\Theta(Nk)$, making it scale poorly with both $n$ and $k$. As a result, it becomes impractical for large datasets and was unable to complete execution for $N = 10^6$ due to resource limitations.
+\end{itemize}
+
+
+
+
+
+
+
+\subsubsection{Discuss the impact of the parameter $k$}
+
+Table \ref{table:k-impact} presents the ratio of computation times between selecting the median ($k=N/2$) and the 10th percentile ($k=N/10$) for each algorithm.
+
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \caption{Ratio of computation times between selecting the median and the $10$-th percentile.}
+    \label{table:k-impact}
+    \begin{tabular}{llrrrrrrrrrrrr}
+        \toprule
+        {Type of array} & \multicolumn{3}{c}{{random}} & \multicolumn{3}{c}{{increasing}} & \multicolumn{3}{c}{{decreasing}} & \multicolumn{3}{c}{{constant}} \\
+        \cmidrule(r){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(l){11-13}
+        {Size} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} & \multicolumn{1}{c}{$10^4$} & \multicolumn{1}{c}{$10^5$} & \multicolumn{1}{c}{$10^6$} \\
+        \midrule 
+        SelectionSelect & 3.98 & 3.94 & - & 3.93 & 3.94 & - & 3.71 & 3.57 & - & 3.95 & 3.95 & - \\
+        HeapSelect & 3.39 & 3.33 & 3.47 & 4.54 & 4.49 & 4.42 & 3.72 & 3.51 & 3.78 & 1.67 & 1.82 & 1.90 \\
+        QuickSelect & 1.27 & 1.13 & - & 0.75 & 0.76 & - & 2.79 & 2.77 & - & 0.76 & 0.76 & - \\
+        FRSelect & 1.67 & 1.93 & 2.00 & 0.50 & 0.94 & 1.07 & 1.67 & 1.50 & 1.38 & 1.00 & 0.98 & 1.00 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Overall, only \texttt{SelectionSelect} and \texttt{HeapSelect} exhibit strong dependences on $k$, while \texttt{QuickSelect} and \texttt{FRSelect} tend to behave uniformly regardless of $k$, assuming favorable pivot distributions:
+
+
+
+\begin{itemize}
+    \item \texttt{SelectionSelect} is directly and significantly influenced by $k$, as it performs one full scan per increment of $i$ up to $k$. As a result, time grows linearly with $k$, as confirmed by the 4-time difference between times for $k = N/10$ and $k = N/2$.
+    \begin{itemize}
+        \item The 4-time difference is reasonable. Although $k$ increases by a factor of $5$ between the median and $10$-th percentile due to the time complexity of $\Theta (Nk)$, and the inner loop becomes slightly shorter for higher values of $j$ in the outer loop. As a result, the growth in runtime is sublinear in practice despite the theoretical $\Theta (Nk)$ bound, and an around $4$-time increase instead of $5$-time aligns well with this behavior.
+    \end{itemize}
+    \item \texttt{HeapSelect} is also impacted by $k$, but less dramatically. Since each \textit{MinHeapify} operation costs logarithmic time, performance scales in the order of $k \log N$, which was visible in the time increases observed.
+    \item \texttt{QuickSelect} and \texttt{FRSelect} were generally insensitive to the value of $k$. In these algorithms, the number of recursive steps depends on the pivot position rather than $k$ itself. However, input structure still plays a larger role than $k$ in determining actual performance.
+\end{itemize}
+
+\newpage
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+
+\section{Appendix: Pseudocode} \label{Appendix}
+\begin{multicols}{2}
+\subsection{\texttt{SelectionSort}}
+\begin{codebox}
+\Procname{$\proc{SelectionSelect}(A, k)$}
+\li \For $i \gets 1$ \To $k$
+\li \Do $smallest \gets i$
+\li     \For $j \gets i + 1$ \To $A.length$
+\li     \Do \If $A[j] < A[smallest]$
+\li         \Then $smallest \gets j$
+            \End
+        \End
+\li     $swap(A[i], A[smallest])$
+    \End
+\li \Return $k$
+\End
+\end{codebox}
+% \vspace{5pt}
+
+\subsection{\texttt{HeapSelect}}
+
+\begin{codebox}
+\Procname{$\proc{HeapSelect}(A, k)$}
+\li $\proc{BuildMinHeap}(A)$
+\li $A.heap\_size \gets A.length$
+\li \For $i \gets 1$ \To $k$
+\li \Do $swap(A[1], A[A.heapSize - 1])$
+\li     $heap\_size \gets heap\_size - 1$
+\li     $\proc{MinHeapify}(A, 1)$
+    \End
+\li \Return $A.length - k$ // or heap\_size
+\End
+\end{codebox}
+
+% \vspace{5pt}
+
+\begin{codebox}
+\Procname{$\proc{BuildMinHeap}(A)$}
+\li \For $i \gets \lfloor length/2 \rfloor$ \Downto $1$
+\li \Do $\proc{MinHeapify}(A, i)$
+    \End
+\End
+\end{codebox}
+
+% \vspace{5pt}
+
+% \columnbreak
+
+
+\begin{codebox}
+\Procname{$\proc{minHeapify}(A, i)$}
+\li $smallest \gets i$
+\li $l \gets LEFT(i)$ // 2i
+\li $r \gets RIGHT(i)$ // 2i + 1
+\li \If $l \leq heap\_size$ and $A[l] < A[smallest]$
+\li \Then $smallest \gets l$
+    \End
+\li \If $r \leq heap\_size$ and $A[r] < A[smallest]$
+\li \Then $smallest \gets r$
+    \End
+\li \If $smallest \neq i$
+\li \Then $swap(A[i], A[smallest])$
+\li     $\proc{minHeapify}(A, smallest)$
+    \End
+\End
+\end{codebox}
+
+
+\subsection{\texttt{QuickSelect}}
+
+\begin{codebox}
+\Procname{$\proc{QuickSelect}(A, p, r, k)$}
+\li \If $p = r$
+\li \Then \Return $p$
+    \End
+\li $q \gets \proc{Partition}(A, p, r)$
+\li \If $k = q$
+\li \Then \Return $q$
+    \End
+\li \ElseIf $k < q$
+\li \Then \Return $\proc{QuickSelect}(A, p, q-1, k)$
+\li \Else \Return $\proc{QuickSelect}(A, q+1, r, k)$
+    \End
+\end{codebox}
+
+% \vspace{5pt}
+
+\begin{codebox}
+\Procname{$\proc{Partition}(A, p, r)$}
+% \li $pivotIndex \gets r$
+\li $i \gets p - 1$
+\li \For $j \gets p$ \To $r - 1$
+\li \Do \If $A[j] \leq A[r]$
+\li     \Then $i \gets i + 1$
+\li         $swap(A[i], A[j])$
+        \End
+    \End
+\li $swap(A[i+1], A[r])$
+\li \Return $i + 1$
+\End
+\end{codebox}
+
+\subsection{\texttt{FRSelect}}
+
+Floyd et al. introduced the Floyd-Rivest Algorithm with the pseudocode \cite{floyd1975algorithm}.
+
+\end{multicols}
+
+\end{document}
+
+% %% QUESTIONS
+% 0/ Best case means the array is sorted or k = 1?
+% 1/ HeapSort: Can I initialize `largest = i` first in the MaxHeapify function
+% 2/ HeapSelect: floor() function
+
+% 6/ QuickSelect is slower than SelectionSelect and HeapSelect
+
+% 10/ Connect to test machine
+
+%% REFERENCES
+
+% SelectionSelect: https://www.geeksforgeeks.org/selection-sort-algorithm-2/ and https://www.geeksforgeeks.org/selection-algorithms/
+% HeapSelect: https://medium.com/nerd-for-tech/quick-select-algorithm-17ac146b6218#:~:text=The%20time%20complexity%20for%20the,be%20avoided%20in%20most%20cases.
+% https://malyasova.github.io/data_structures/2020/09/06/selection-problem-heap.html
+% QuickSelect: https://www.geeksforgeeks.org/quickselect-algorithm/
+% FRSelect: https://www.geeksforgeeks.org/floyd-rivest-algorithm/
+
+
+
+
+
+
+% duvu@duvu-Legion-Pro-5-16IRX8:~/All/82_Master_Uliege/INFO0902-SDA/10_Project/project1$ ./heapselect 
+% Running experiments on array size: 10000
+% Each result is averaged over 10 runs.
+
+% Results for Median (k = 5000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00090   (  70743,  137082)
+% increasing     0.00058   (  63077,  128095)
+% decreasing     0.00066   (  75883,  142375)
+% constant       0.00005   (   5001,   20001)
+
+% Results for 10th Percentile (k = 1000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00024   (  20463,   43315)
+% increasing     0.00014   (  13194,   34385)
+% decreasing     0.00018   (  23782,   45756)
+% constant       0.00003   (   1001,   12001)
+
+% Results for Median (k = 50000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00977   ( 874130, 1704351)
+% increasing     0.00731   ( 796792, 1609845)
+% decreasing     0.00802   ( 925799, 1756943)
+% constant       0.00050   (  50001,  200001)
+
+% Results for 10th Percentile (k = 10000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00296   ( 237885,  499237)
+% increasing     0.00165   ( 165649,  411295)
+% decreasing     0.00223   ( 268201,  517608)
+% constant       0.00026   (  10001,  120001)
+
+% duvu@duvu-Legion-Pro-5-16IRX8:~/All/82_Master_Uliege/INFO0902-SDA/10_Project/project1$ ./selectionselect 
+% Running experiments on array size: 10000
+% Each result is averaged over 10 runs.
+
+% Results for Median (k = 5000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.05676   (   5001, 37502499)
+% increasing     0.05500   (   5001, 37502499)
+% decreasing     0.05872   (   5001, 37502499)
+% constant       0.05505   (   5001, 37502499)
+
+% Results for 10th Percentile (k = 1000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.01384   (   1001, 9508499)
+% increasing     0.01401   (   1001, 9508499)
+% decreasing     0.01519   (   1001, 9508499)
+% constant       0.01390   (   1001, 9508499)
+
+% Results for Median (k = 50000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         5.54020   (  50001, 3750024999)
+% increasing     5.51829   (  50001, 3750024999)
+% decreasing     6.96218   (  50001, 3750024999)
+% constant       5.49540   (  50001, 3750024999)
+
+% Results for 10th Percentile (k = 10000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         1.40004   (  10001, 950084999)
+% increasing     1.39025   (  10001, 950084999)
+% decreasing     1.94467   (  10001, 950084999)
+% constant       1.39178   (  10001, 950084999)
+
+% duvu@duvu-Legion-Pro-5-16IRX8:~/All/82_Master_Uliege/INFO0902-SDA/10_Project/project1$ ./quickselect 
+% Running experiments on array size: 10000
+% Each result is averaged over 10 runs.
+
+% Results for Median (k = 5000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00014   (  16261,   33510)
+% increasing     0.12229   (37502500, 37497500)
+% decreasing     0.11824   (24749112, 49530691)
+% constant       0.12279   (37502500, 37497500)
+
+% Results for 10th Percentile (k = 1000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00011   (  14136,   26776)
+% increasing     0.16220   (49504500, 49495500)
+% decreasing     0.04240   (8913100, 17828014)
+% constant       0.16169   (49504500, 49495500)
+
+% Results for Median (k = 50000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00140   ( 184300,  337053)
+% increasing    12.39652   (3750025000, 3749975000)
+% decreasing    11.03308   (2290664101, 4567259156)
+% constant      12.37940   (3750025000, 3749975000)
+
+% Results for 10th Percentile (k = 10000)
+% Array         Time [s]   (#swaps, #comps)
+% ------------  --------   ----------------------
+% random         0.00124   ( 119222,  292732)
+% increasing    16.31266   (4950045000, 4949955000)
+% decreasing     3.97832   (824475759, 1642308451)
+% constant      16.34995   (4950045000, 4949955000)
