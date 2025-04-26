@@ -7,6 +7,9 @@
  * ./bp <disksize> <number_of_files>
  */
 
+// necessary for some string function
+#define _POSIX_C_SOURCE 200809L
+
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,9 +21,6 @@
 #include "Disk.h"
 #include "File.h"
 #include "BP.h"
-
-// necessary for some string function
-#define _POSIX_C_SOURCE 200809L
 
 static List *readFiles(char *filename)
 {
@@ -42,6 +42,7 @@ static List *readFiles(char *filename)
         File *file = fileCreate(name, size);
         llInsertLast(files, file);
     }
+    fclose(csvfile);
     return files;
 }
 

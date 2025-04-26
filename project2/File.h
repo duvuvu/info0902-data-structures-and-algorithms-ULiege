@@ -6,7 +6,7 @@
 typedef struct File_t File;
 
 /**
- * @brief Creates a file
+ * @brief Creates a file. fileName will be freed by fileFree.
  * 
  * @param fileName the name of the file
  * @param fileSize the size of the file
@@ -15,7 +15,7 @@ typedef struct File_t File;
 File *fileCreate(char *fileName, size_t fileSize);
 
 /**
- * @brief Frees file f from memory
+ * @brief Frees file f from memory, include the file name.
  * 
  * @param f the file
  */
