@@ -33,7 +33,8 @@ typedef struct avlnode {
 	struct avlnode *right;
 	struct avlnode *parent;
 	char bf;
-	void *data;
+    void *data;         // Pointer to Disk
+    size_t space;       // Store free space of Disk
 } avlnode;
 
 typedef struct {
@@ -73,6 +74,6 @@ int avl_check_order(avltree *avlt, void *min, void *max);
 int avl_check_height(avltree *avlt);
 
 // BF update: new functions for best-fit algorithm
-avlnode *bst_find_bestfit(avltree *avlt, size_t size);
+avlnode *tree_search_bf(avltree *avlt, size_t file_size);
 
 #endif /* BST_BESTFIT_H */

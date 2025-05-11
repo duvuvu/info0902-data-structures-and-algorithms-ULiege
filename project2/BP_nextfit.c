@@ -20,11 +20,12 @@ size_t binpacking(size_t diskSize, List *files, List *disks)
     // Sort files in descending order of size before packing
     llSort(files, compareFileSizeDescending);
 
+    Disk *currentDisk = NULL; // Current open disk
+
     Node *p = llHead(files);
     size_t nbDisks = 0;
 
-    Disk *currentDisk = NULL;
-
+    // Place each file using Next-Fit
     while (p != NULL)
     {
         File *f = llData(p);

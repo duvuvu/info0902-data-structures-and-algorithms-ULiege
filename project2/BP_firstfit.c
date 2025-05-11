@@ -5,7 +5,7 @@
 #include "Disk.h"
 #include "File.h"
 #include "LinkedList.h"
-#include "BST_firstfit.h" // Special BST for First-Fit
+#include "BST_firstfit.h" // use First-Fit BST
 
 /*
     Implementation of the First-Fit strategy
@@ -21,20 +21,24 @@ static void dummyDestroy(void *data)
     (void)data;
 }
 
-static int compareDiskPointer(const void *d1, const void *d2)
+static int compareIndex(const void *a, const void *b)
 {
-    if (d1 < d2) return -1;
-    if (d1 > d2) return 1;
+    const avlnode *node1 = (const avlnode *)a;
+    const avlnode *node2 = (const avlnode *)b;
+
+    if (node1->index < node2->index) return -1;
+    if (node1->index > node2->index) return 1;
     return 0;
 }
 
+
 size_t binpacking(size_t diskSize, List *files, List *disks)
 {
-    // Step 1: Sort files descending by size
+    // Sort files in descending order of size before packing
     llSort(files, compareFileSizeDescending);
 
-    // Step 2: Create an empty AVL tree
-    avltree *tree = avl_create(compareDiskPointer, dummyDestroy);
+    // Create an empty AVL tree based on disk index
+    avltree *tree = avl_create(compareIndex, dummyDestroy);
 
     size_t nbDisks = 0;
     Node *p = llHead(files);
@@ -42,25 +46,23 @@ size_t binpacking(size_t diskSize, List *files, List *disks)
     while (p != NULL)
     {
         File *f = llData(p);
-
-        // Step 3: Search for the first disk that fits
-        avlnode *node = bst_firstfit_find(tree, fileSize(f));
+        avlnode *node = tree_search_ff(tree, fileSize(f)); // Search for the first disk that fits
 
         if (node != NULL)
         {
-            // Found a disk -> add file
-            diskAddFile(node->data, f);
-            node->space -= fileSize(f); // Update the node's free space
-            avl_update_maxspace(tree, node); // Propagate maxspace update upwards
+            //Found the first fitting disk, add file to it
+            diskAddFile(node->data, f); // add file
+            node->space -= fileSize(f); // update the node's free space
+            avl_update_maxspace(tree, node); // propagate maxspace update upwards
         }
         else
         {
-            // No fitting disk -> create a new disk
+            // No fitting disk, create a new one
             Disk *newDisk = diskCreate(diskSize);
             diskAddFile(newDisk, f);
 
             // Insert into tree with initial free space
-            avl_insert(tree, newDisk, diskFreeSpace(newDisk));
+            avl_insert(tree, newDisk, diskFreeSpace(newDisk), nbDisks);
 
             // Add to list of disks
             llInsertLast(disks, newDisk);

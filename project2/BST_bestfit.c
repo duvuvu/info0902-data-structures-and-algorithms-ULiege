@@ -40,11 +40,15 @@ avltree *avl_create(int (*compare_func)(const void *, const void *), void (*dest
 	avlt->nil.left = avlt->nil.right = avlt->nil.parent = AVL_NIL(avlt);
 	avlt->nil.bf = 0;
 	avlt->nil.data = NULL;
+	avlt->nil.space = 0; // init free space to 0
+
 
 	/* sentinel node root */
 	avlt->root.left = avlt->root.right = avlt->root.parent = AVL_NIL(avlt);
 	avlt->root.bf = 0;
 	avlt->root.data = NULL;
+	avlt->root.space = 0; // init free space to 0
+
 
 	// #ifdef AVL_MIN
 	// avlt->min = NULL;
@@ -658,29 +662,26 @@ void destroy(avltree *avlt, avlnode *n)
 // ----------------------------------------------
 
 /*
- * find the best fit node with enough space
+ * find the best-fit node with enough space
  * return NULL if not found
  */
-avlnode *bst_find_bestfit(avltree *avlt, size_t size)
+// avlnode *bst_find_bestfit(avltree *avlt, size_t size)
+avlnode *tree_search_bf(avltree *avlt, size_t k)
 {
-	avlnode *current = AVL_FIRST(avlt);
-	avlnode *best = NULL;
+    avlnode *x = avlt->root.left; // Start from real root
+    avlnode *best = AVL_NIL(avlt); // NIL initially
 
-	while (current != AVL_NIL(avlt))
-	{
-		size_t freeSpace = diskFreeSpace(current->data);
+    while (x != AVL_NIL(avlt)) {
+        if (x->space >= k) {
+            best = x; // Possible candidate
+            x = x->left; // Try smaller one
+        } else {
+            x = x->right; // Try larger ones
+        }
+    }
 
-		if (freeSpace >= size)
-		{
-			if (best == NULL || freeSpace < diskFreeSpace(best->data))
-				best = current;
-			current = current->left;
-		}
-		else
-		{
-			current = current->right;
-		}
-	}
-
-	return best;
+    if (best == AVL_NIL(avlt))
+        return NULL; // No fit found
+    else
+        return best;
 }

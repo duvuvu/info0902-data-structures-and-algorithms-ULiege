@@ -1,0 +1,40 @@
+CPU time: 0.000012
+Total file sizes: 2381
+Disk size: 150
+Minimum/Maximum number of disks: 16/50
+Number of disks in solution: 17
+Lost space: 169
+Disk 0: used space: 150, free space: 0
+Files (3): [f1, 100][f25, 45][f46, 5]
+Disk 1: used space: 150, free space: 0
+Files (3): [f2, 100][f26, 45][f47, 5]
+Disk 2: used space: 150, free space: 0
+Files (2): [f3, 96][f23, 54]
+Disk 3: used space: 145, free space: 5
+Files (2): [f4, 94][f24, 51]
+Disk 4: used space: 150, free space: 0
+Files (3): [f5, 90][f20, 59][f50, 1]
+Disk 5: used space: 150, free space: 0
+Files (2): [f6, 88][f16, 62]
+Disk 6: used space: 149, free space: 1
+Files (2): [f7, 87][f17, 62]
+Disk 7: used space: 150, free space: 0
+Files (2): [f8, 85][f15, 65]
+Disk 8: used space: 145, free space: 5
+Files (2): [f9, 83][f18, 62]
+Disk 9: used space: 150, free space: 0
+Files (3): [f10, 81][f19, 61][f43, 8]
+Disk 10: used space: 149, free space: 1
+Files (4): [f11, 80][f21, 59][f44, 7][f48, 3]
+Disk 11: used space: 137, free space: 13
+Files (2): [f12, 80][f22, 57]
+Disk 12: used space: 149, free space: 1
+Files (4): [f13, 77][f27, 40][f33, 29][f49, 3]
+Disk 13: used space: 149, free space: 1
+Files (3): [f14, 74][f28, 38][f29, 37]
+Disk 14: used space: 145, free space: 5
+Files (5): [f30, 37][f31, 37][f32, 36][f34, 29][f45, 6]
+Disk 15: used space: 149, free space: 1
+Files (7): [f35, 27][f36, 26][f37, 22][f38, 22][f39, 21][f40, 17][f41, 14]
+Disk 16: used space: 14, free space: 136
+Files (1): [f42, 14]

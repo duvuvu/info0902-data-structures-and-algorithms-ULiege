@@ -34,6 +34,7 @@ typedef struct avlnode { // FF update: modify the structure of avlnode
     struct avlnode *parent;
     char bf;
     void *data;
+    size_t index; // FF update: added to store index of disk in the list
     size_t space;      // FF update: added to store free space of disk
     size_t maxspace;   // FF update: added to store maximum free space in subtree
 } avlnode;
@@ -68,7 +69,7 @@ avlnode *avl_successor(avltree *avlt, avlnode *node);
 int avl_apply(avltree *avlt, avlnode *node, int (*func)(void *, void *), void *cookie, enum avltraversal order);
 void avl_print(avltree *avlt, void (*print_func)(void *));
 
-avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace); // FF update: avl_insert needs freeSpace parameter
+avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace, size_t index); // FF update: avl_insert needs freeSpace parameter
 void *avl_delete(avltree *avlt, avlnode *node, int keep);
 
 int avl_check_order(avltree *avlt, void *min, void *max);
@@ -76,7 +77,7 @@ int avl_check_height(avltree *avlt);
 
 // FF update: new functions for first-fit algorithm
 void avl_update_maxspace(avltree *avlt, avlnode *node);
-avlnode *bst_firstfit_find(avltree *avlt, size_t size);
+avlnode *tree_search_ff(avltree *avlt, size_t size);
 
 #endif /* BST_FIRSTFIT_H */
  

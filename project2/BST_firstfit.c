@@ -170,65 +170,159 @@ int avl_check_height(avltree *avlt)
  * insert (or update) data
  * return NULL if out of memory
  */
-avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace) // FF update: add freeSpace parameter
-{
-	avlnode *current, *parent;
-	avlnode *new_node;
+// avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace, size_t index) // FF update: add freeSpace parameter
+// {
+// 	avlnode *current, *parent;
+// 	avlnode *new_node;
 
-	/* do a binary search to find where it should be */
+// 	/* do a binary search to find where it should be */
 
-	current = AVL_FIRST(avlt);
-	parent = AVL_ROOT(avlt);
+// 	current = AVL_FIRST(avlt);
+// 	parent = AVL_ROOT(avlt);
 
-	while (current != AVL_NIL(avlt)) {
-		int cmp;
-		cmp = avlt->compare(data, current->data);
+// 	while (current != AVL_NIL(avlt)) {
+// 		int cmp;
+// 		cmp = avlt->compare(data, current->data);
 
-		#ifndef AVL_DUP
-		if (cmp == 0) {
-			avlt->destroy(current->data);
-			current->data = data;
-			// return current; // FF update: in our FF, we never replace existing disks
-		}
-		#endif
+// 		#ifndef AVL_DUP
+// 		if (cmp == 0) {
+// 			avlt->destroy(current->data);
+// 			current->data = data;
+// 			// return current; // FF update: in our FF, we never replace existing disks
+// 		}
+// 		#endif
 
-		parent = current;
-		current = (cmp < 0) ? current->left : current->right;
-	}
+// 		parent = current;
+// 		current = (cmp < 0) ? current->left : current->right;
+// 	}
 	
-	/* replace the termination NIL pointer with the new node pointer */
+// 	/* replace the termination NIL pointer with the new node pointer */
 
-	current = new_node = (avlnode *) malloc(sizeof(avlnode));
-	if (current == NULL)
-		return NULL; /* out of memory */
+// 	current = new_node = (avlnode *) malloc(sizeof(avlnode));
+// 	if (current == NULL)
+// 		return NULL; /* out of memory */
 
-	current->left = current->right = AVL_NIL(avlt);
-	current->parent = parent;
-	current->bf = 0;
-	current->data = data;
-    current->space = freeSpace; // FF update: added to store free space of the node (disk)
-    current->maxspace = freeSpace; // FF update: added to store max free space of the subtree
+// 	current->left = current->right = AVL_NIL(avlt);
+// 	current->parent = parent;
+// 	current->bf = 0;
+// 	current->data = data;
+// 	current->index = index; // FF update: added to store index of disk in the list
+//     current->space = freeSpace; // FF update: added to store free space of the node (disk)
+//     current->maxspace = freeSpace; // FF update: added to store max free space of the subtree
 
 
-	if (parent == AVL_ROOT(avlt) || avlt->compare(data, parent->data) < 0)
-		parent->left = current;
-	else
-		parent->right = current;
+// 	if (parent == AVL_ROOT(avlt) || avlt->compare(data, parent->data) < 0)
+// 		parent->left = current;
+// 	else
+// 		parent->right = current;
 
-	// #ifdef AVL_MIN // AVL_MIN/min updates (not needed for First-Fit)
-	// if (avlt->min == NULL || avlt->compare(current->data, avlt->min->data) < 0)
-	// 	avlt->min = current;
-	// #endif
+// 	// #ifdef AVL_MIN // AVL_MIN/min updates (not needed for First-Fit)
+// 	// if (avlt->min == NULL || avlt->compare(current->data, avlt->min->data) < 0)
+// 	// 	avlt->min = current;
+// 	// #endif
 
-	/*
-	 * After insertion it is necessary to update the balance factors of all nodes, 
-	 * observe that all nodes requiring correction must be on the path from the root to the new node.
-	 * 
-	 * Backtracking the top-down path from the root to the new node:
-	 * 1. update the balance factor of parent node; 
-	 * 2. rebalance if the balance factor of parent node temporarily becomes +2 or -2 (parent subtree has the same height as before, thus backtracking terminate immediately); 
-	 * 3. terminate if the height of that parent subtree remains unchanged.
-	 */
+// 	/*
+// 	 * After insertion it is necessary to update the balance factors of all nodes, 
+// 	 * observe that all nodes requiring correction must be on the path from the root to the new node.
+// 	 * 
+// 	 * Backtracking the top-down path from the root to the new node:
+// 	 * 1. update the balance factor of parent node; 
+// 	 * 2. rebalance if the balance factor of parent node temporarily becomes +2 or -2 (parent subtree has the same height as before, thus backtracking terminate immediately); 
+// 	 * 3. terminate if the height of that parent subtree remains unchanged.
+// 	 */
+// 	while (current != AVL_FIRST(avlt)) { /* Loop (possibly up to the root) */
+// 		if (current == parent->left) { /* The height of left subtree of parent subtree increases */
+// 			if (parent->bf == 1) { /* parent subtree is right-heavy */
+// 				/*
+// 				 * height increase of left subtree is absorbed at parent node, 
+// 				 * height of parent subtree remains unchanged, thus backtracking terminate.
+// 				 */
+// 				parent->bf = 0; /* height unchanged, balanced, goto break */
+// 				break;
+// 			} else if (parent->bf == 0) { /* parent subtree is balanced */
+// 				/*
+// 				 * height of parent subtree increases by one, thus backtracking continue.
+// 				 */
+// 				parent->bf = -1; /* height increased, left-heavy, goto loop */
+// 			} else if (parent->bf == -1) { /* parent subtree is left-heavy */
+// 				/*
+// 				 * the balance factor becomes -2, this has to be repaired by an appropriate rotation
+// 				 * after which parent subtree has the same height as before.
+// 				 */
+// 				fix_insert_leftimbalance(avlt, parent); /* height unchanged, balanced, goto break */
+// 				break;
+// 			}
+// 		} else { /* The height of right subtree of parent subtree increases */
+// 			if (parent->bf == -1) { /* parent subtree is left-heavy */
+// 				/*
+// 				 * height increase of right subtree is absorbed at parent node, 
+// 				 * height of parent subtree remains unchanged, thus backtracking terminate.
+// 				 */
+// 				parent->bf = 0; /* height unchanged, balanced, goto break */
+// 				break;
+// 			} else if (parent->bf == 0) { /* parent subtree is balanced */
+// 				/*
+// 				 * height of parent subtree increases by one, thus backtracking continue.
+// 				 */
+// 				parent->bf = 1; /* height increased, right-heavy, goto loop */
+// 			} else if (parent->bf == 1) {
+// 				/*
+// 				 * the balance factor becomes 2, this has to be repaired by an appropriate rotation
+// 				 * after which parent subtree has the same height as before.
+// 				 */
+// 				fix_insert_rightimbalance(avlt, parent); /* height unchanged, balanced, goto break */
+// 				break;
+// 			}
+// 		}
+
+// 		/* move up */
+// 		current = parent;
+// 		parent = current->parent;
+// 	}
+
+//     avl_update_maxspace(avlt, new_node);   // FF update: added to update maxspace after insertion
+
+// 	return new_node;
+// }
+avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace, size_t index)
+{
+    avlnode *current, *parent;
+    avlnode *new_node;
+
+    /* Create a temporary fake node for comparison */
+    avlnode temp;
+    temp.index = index;
+
+    /* Binary search based on index */
+    current = AVL_FIRST(avlt);
+    parent = AVL_ROOT(avlt);
+
+    while (current != AVL_NIL(avlt)) {
+        int cmp = avlt->compare(&temp, current);
+
+        parent = current;
+        current = (cmp < 0) ? current->left : current->right;
+    }
+
+    /* Create new node */
+    current = new_node = (avlnode *)malloc(sizeof(avlnode));
+    if (current == NULL)
+        return NULL; /* out of memory */
+
+    current->left = current->right = AVL_NIL(avlt);
+    current->parent = parent;
+    current->bf = 0;
+    current->data = data;
+    current->index = index;    // ✅ Correctly save index
+    current->space = freeSpace;
+    current->maxspace = freeSpace;
+
+    if (parent == AVL_ROOT(avlt) || avlt->compare(&temp, parent) < 0)
+        parent->left = current;
+    else
+        parent->right = current;
+
+    /* Rebalance AVL if needed (your original code) */
 	while (current != AVL_FIRST(avlt)) { /* Loop (possibly up to the root) */
 		if (current == parent->left) { /* The height of left subtree of parent subtree increases */
 			if (parent->bf == 1) { /* parent subtree is right-heavy */
@@ -279,10 +373,11 @@ avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace) // FF update: a
 		parent = current->parent;
 	}
 
-    avl_update_maxspace(avlt, new_node);   // FF update: added to update maxspace after insertion
+    avl_update_maxspace(avlt, new_node);  // ✅ Update maxspace
 
-	return new_node;
+    return new_node;
 }
+
 
 /*
  * delete node
@@ -640,21 +735,40 @@ int check_height(avltree *avlt, avlnode *n)
 	return 1 + ((lh > rh) ? lh : rh);
 }
 
-/*
- * print node recursively
- */
-void print(avltree *avlt, avlnode *n, void (*print_func)(void *), int depth, char *label)
+// /*
+//  * print node recursively
+//  */
+// void print(avltree *avlt, avlnode *n, void (*print_func)(void *), int depth, char *label)
+// {
+// 	if (n != AVL_NIL(avlt)) {
+// 		print(avlt, n->right, print_func, depth + 1, "R");
+// 		printf("%*s", 8 * depth, "");
+// 		if (label)
+// 			printf("%s: ", label);
+// 		print_func(n->data);
+// 		printf(" (%s%d)\n", (n->bf >= 0) ? "+" : "", n->bf);
+// 		print(avlt, n->left, print_func, depth + 1, "L");
+// 	}
+// }
+
+static void print(avltree *avlt, avlnode *n, void (*print_func)(void *), int depth, char *label)
 {
-	if (n != AVL_NIL(avlt)) {
-		print(avlt, n->right, print_func, depth + 1, "R");
-		printf("%*s", 8 * depth, "");
-		if (label)
-			printf("%s: ", label);
-		print_func(n->data);
-		printf(" (%s%d)\n", (n->bf >= 0) ? "+" : "", n->bf);
-		print(avlt, n->left, print_func, depth + 1, "L");
-	}
+    if (n != AVL_NIL(avlt))
+    {
+        print(avlt, n->right, print_func, depth + 1, "R");
+        printf("%*s", 8 * depth, "");
+        if (label)
+            printf("%s: ", label);
+
+        // Print detailed information
+        printf("[index=%zu, space=%zu, maxspace=%zu]\n", n->index, n->space, n->maxspace);
+
+        print(avlt, n->left, print_func, depth + 1, "L");
+    }
 }
+
+
+
 
 /*
  * destroy node recursively
@@ -700,27 +814,33 @@ void avl_update_maxspace(avltree *avlt, avlnode *node)
  * find the first fit node with enough space
  * return NULL if not found
  */
-avlnode *bst_firstfit_find(avltree *avlt, size_t size)
+avlnode *tree_search_ff(avltree *avlt, size_t size)
 {
-	avlnode *current = AVL_FIRST(avlt);
-	avlnode *result = NULL;
+    avlnode *current = AVL_FIRST(avlt);
 
-	while (current != AVL_NIL(avlt))
-	{
-		if (current->left != AVL_NIL(avlt) && current->left->maxspace >= size)
-		{
-			current = current->left;
-		}
-		else if (current->space >= size)
-		{
-			result = current;
-			break;
-		}
-		else
-		{
-			current = current->right;
-		}
-	}
+    while (current != AVL_NIL(avlt))
+    {
+        // If entire subtree rooted at current node has not enough space
+        if (current->maxspace < size)
+            return NULL;
 
-	return result;
+        // Prefer going left if possible
+        if (current->left != AVL_NIL(avlt) && current->left->maxspace >= size)
+        {
+            current = current->left;
+        }
+        // Otherwise, check current node itself
+        else if (current->space >= size)
+        {
+            return current;
+        }
+        // Otherwise, go right
+        else
+        {
+            current = current->right;
+        }
+    }
+
+    // If we exit the loop, no suitable disk was found
+    return NULL;
 }
