@@ -13,7 +13,7 @@
 
 static int compareFileSizeDescending(const void *f1, const void *f2)
 {
-    return compareFileSize(f2, f1);  // Flip order for descending sort
+    return compareFileSize(f2, f1); // flip order for descending sort
 }
 
 size_t binpacking(size_t diskSize, List *files, List *disks)
@@ -58,7 +58,7 @@ size_t binpacking(size_t diskSize, List *files, List *disks)
             llInsertLast(disks, targetDisk);
         }
 
-        pqInsert(pq, targetDisk); // Reinsert into PQ but with updated free space
+        pqInsert(pq, targetDisk); // reinsert into PQ but with updated free space
         p = llNext(p);
     }
 

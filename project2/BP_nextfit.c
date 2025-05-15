@@ -12,7 +12,7 @@
 
 static int compareFileSizeDescending(const void *f1, const void *f2)
 {
-    return compareFileSize(f2, f1);  // Flip order for descending sort
+    return compareFileSize(f2, f1); // flip order for descending sort
 }
 
 size_t binpacking(size_t diskSize, List *files, List *disks)
@@ -20,7 +20,7 @@ size_t binpacking(size_t diskSize, List *files, List *disks)
     // Sort files in descending order of size before packing
     llSort(files, compareFileSizeDescending);
 
-    Disk *currentDisk = NULL; // Current open disk
+    Disk *currentDisk = NULL; // current open disk
 
     Node *p = llHead(files);
     size_t nbDisks = 0;

@@ -7,9 +7,6 @@
 #ifndef BST_FIRSTFIT_H
 #define BST_FIRSTFIT_H
 
-//  #define AVL_DUP 1 // FF update: remove duplicate nodes
-//  #define AVL_MIN 1 // FF update: keep track of the minimum node
-
 /*
  * node->bf = height(node->right) - height(node->left)
  * balance factors can be kept up-to-date by knowning the previous balance factors and the change in height
@@ -34,9 +31,9 @@ typedef struct avlnode { // FF update: modify the structure of avlnode
     struct avlnode *parent;
     char bf;
     void *data;
-    size_t index; // FF update: added to store index of disk in the list
-    size_t space;      // FF update: added to store free space of disk
-    size_t maxspace;   // FF update: added to store maximum free space in subtree
+    size_t key; // FF update: added to store key of disk in the list
+    size_t space; // FF update: added to store free space of disk
+    size_t maxspace; // FF update: added to store maximum free space in subtree
 } avlnode;
 
 typedef struct {
@@ -46,10 +43,6 @@ typedef struct {
 
     avlnode root;
     avlnode nil;
-
-//  #ifdef AVL_MIN // FF update: remove the minimum node
-//  avlnode *min;
-//  #endif
 } avltree;
 
 #define AVL_ROOT(avlt) (&(avlt)->root)
@@ -69,7 +62,7 @@ avlnode *avl_successor(avltree *avlt, avlnode *node);
 int avl_apply(avltree *avlt, avlnode *node, int (*func)(void *, void *), void *cookie, enum avltraversal order);
 void avl_print(avltree *avlt, void (*print_func)(void *));
 
-avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace, size_t index); // FF update: avl_insert needs freeSpace parameter
+avlnode *avl_insert(avltree *avlt, void *data, size_t freeSpace, size_t key); // FF update: avl_insert needs freeSpace parameter
 void *avl_delete(avltree *avlt, avlnode *node, int keep);
 
 int avl_check_order(avltree *avlt, void *min, void *max);

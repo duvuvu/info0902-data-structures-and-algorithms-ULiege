@@ -1,4 +1,4 @@
-// Placez ici votre implémentation d'arbre binaire de recherche pour BP_firstfit.h
+// Placez ici votre implémentation d'arbre binaire de recherche pour BP_bestfit.h
 
 /*
  * Modified from avl_bf.h for Best-Fit BST
@@ -6,9 +6,6 @@
 
  #ifndef BST_BESTFIT_H
  #define BST_BESTFIT_H
-
-//  #define AVL_DUP 1 // FF update: remove duplicate nodes
-//  #define AVL_MIN 1 // FF update: keep track of the minimum node
 
 /*
  * node->bf = height(node->right) - height(node->left)
@@ -28,13 +25,13 @@ enum avltraversal {
 	POSTORDER
 };
 
-typedef struct avlnode {
+typedef struct avlnode { // FF update: modify the structure of avlnode
 	struct avlnode *left;
 	struct avlnode *right;
 	struct avlnode *parent;
 	char bf;
-    void *data;         // Pointer to Disk
-    size_t space;       // Store free space of Disk
+    void *data; // pointer to disk
+    size_t space; // BF update: Store free space of disk
 } avlnode;
 
 typedef struct {
@@ -44,10 +41,6 @@ typedef struct {
 
 	avlnode root;
 	avlnode nil;
-
-	// #ifdef AVL_MIN // BF update: remove the minimum node
-	// avlnode *min;
-	// #endif
 } avltree;
 
 #define AVL_ROOT(avlt) (&(avlt)->root)

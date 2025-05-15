@@ -12,7 +12,7 @@
 
 static int compareFileSizeDescending(const void *f1, const void *f2)
 {
-    return compareFileSize(f2, f1);  // Flip order
+    return compareFileSize(f2, f1); // flip order for descending sort
 }
 
 static void dummyDestroy(void *data) 
@@ -46,7 +46,7 @@ size_t binpacking(size_t diskSize, List *files, List *disks)
     while (p != NULL)
     {
         File *f = llData(p);
-        avlnode *bestNode = tree_search_bf(tree, fileSize(f)); // Search for best fitting disk
+        avlnode *bestNode = tree_search_bf(tree, fileSize(f)); // search for best fitting disk
         Disk *targetDisk = NULL;
 
         if (bestNode != NULL)
@@ -55,7 +55,7 @@ size_t binpacking(size_t diskSize, List *files, List *disks)
             targetDisk = (Disk *)bestNode->data;
             avl_delete(tree, bestNode, 0); // remove old node
 
-            diskAddFile(targetDisk, f);    // add file to disk
+            diskAddFile(targetDisk, f); // add file to disk
 
             avlnode *newNode = avl_insert(tree, targetDisk);
             newNode->space = diskFreeSpace(targetDisk);
@@ -76,7 +76,7 @@ size_t binpacking(size_t diskSize, List *files, List *disks)
         p = llNext(p);
     }
 
-    // Step 4: Cleanup
+    // Cleanup
     avl_destroy(tree);
 
     return nbDisks;

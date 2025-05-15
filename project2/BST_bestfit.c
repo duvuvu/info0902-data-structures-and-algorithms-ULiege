@@ -1,6 +1,7 @@
+// Placez ici votre implémentation d'arbre binaire de recherche pour BP_bestfit.c
+
 /*
- * Copyright (c) 2019 xieqing. https://github.com/xieqing
- * May be freely redistributed, but copyright notice must be retained.
+ * Modified from avl_bf.c for Best-Fit BST
  */
 
 #include <stdlib.h>
