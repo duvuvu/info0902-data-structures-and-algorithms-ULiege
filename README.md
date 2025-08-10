@@ -1,7 +1,7 @@
 # INFO0902 Structures des donnes et algorithms (Data structures and algorithms)
 
 ## Authors
-This projects were carried by:
+These projects were carried by:
 - Duy Vu DINH
 
 ## Overview
